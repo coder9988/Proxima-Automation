@@ -2,10 +2,12 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
 import Home from "./pages/home";
-import Products from "./pages/Products";
-import Software from "./pages/Software";
-import Services from "./pages/Services";
-import Solutions from "./pages/Solutions";
+import Products from "./pages/products";
+import Software from "./pages/software";
+import Services from "./pages/services";
+import Solutions from "./pages/solutions";
+import Login from "./pages/login";
+import Register from "./pages/register";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/software" element={<Software />} />
         <Route path="/services" element={<Services />} />
         <Route path="/solutions" element={<Solutions />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   );

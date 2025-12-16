@@ -42,4 +42,47 @@ router.post("/", async (req, res) => {
   res.json(machine);
 });
 
+// UPDATE machine
+router.put("/:id", async (req, res) => {
+  try {
+    const machine = await Machine.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!machine) {
+      return res.status(404).json({ error: "Machine not found" });
+    }
+    res.json(machine);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE machine
+router.delete("/:id", async (req, res) => {
+  try {
+    const machine = await Machine.findByIdAndDelete(req.params.id);
+    if (!machine) {
+      return res.status(404).json({ error: "Machine not found" });
+    }
+    res.json({ message: "Machine deleted successfully", id: req.params.id });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET single machine
+router.get("/:id", async (req, res) => {
+  try {
+    const machine = await Machine.findById(req.params.id);
+    if (!machine) {
+      return res.status(404).json({ error: "Machine not found" });
+    }
+    res.json(machine);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;

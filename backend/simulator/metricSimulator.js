@@ -1,4 +1,6 @@
-import Machine from ".src/models/Machine.js";
+import Machine from "../src/models/machine.js";
+import MetricHistory from "../src/models/MetricHistory.js";
+import { checkMetricsForAlerts } from "../src/services/notificationService.js";
 
 function randomInRange(prev, min, max, step) {
   const delta = (Math.random() * 2 - 1) * step;
@@ -10,12 +12,18 @@ function randomInRange(prev, min, max, step) {
   return next;
 }
 
+// Counter for historical data saving (save every 10 seconds to reduce DB load)
+let tickCounter = 0;
+const HISTORY_SAVE_INTERVAL = 10;
+
 export function startMetricSimulator() {
   console.log("🔄 Metric Simulator Started...");
+  console.log("📊 Historical data saved every", HISTORY_SAVE_INTERVAL, "seconds");
 
   setInterval(async () => {
     try {
       const machines = await Machine.find();
+      tickCounter++;
 
       for (const machine of machines) {
         const updatedMetrics = {
@@ -31,10 +39,25 @@ export function startMetricSimulator() {
           runtimeSeconds: machine.runtimeSeconds + 1,
         };
 
+        // Update machine with new metrics
         await Machine.updateOne({ _id: machine._id }, { $set: updatedMetrics });
+
+        // Save to history every HISTORY_SAVE_INTERVAL ticks
+        if (tickCounter % HISTORY_SAVE_INTERVAL === 0) {
+          await MetricHistory.create({
+            machineId: machine._id,
+            ...updatedMetrics,
+          });
+        }
+
+        // Check for alerts (with internal cooldown)
+        await checkMetricsForAlerts(machine, updatedMetrics);
       }
 
-      console.log("✔ Metrics updated");
+      // Log status occasionally
+      if (tickCounter % 60 === 0) {
+        console.log(`✔ Metrics updated | ${machines.length} machines | ${tickCounter} ticks`);
+      }
     } catch (err) {
       console.error("❌ Metric simulator error:", err.message);
     }
