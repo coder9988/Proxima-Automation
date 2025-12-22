@@ -34,7 +34,7 @@ export default function Register() {
 
     try {
       await register(form.name, form.email, form.password, form.company);
-      navigate("/software");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -43,10 +43,10 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center py-12 px-4">
-      <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 via-transparent to-transparent" />
+    <div className="min-h-screen bg-gray-950 text-white pt-20 pb-12 px-4">
+      <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 via-transparent to-transparent pointer-events-none" />
       
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md mx-auto">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-500 text-sm font-medium mb-4">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

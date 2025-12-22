@@ -9,8 +9,7 @@ const metricHistorySchema = new mongoose.Schema({
   },
   timestamp: { 
     type: Date, 
-    default: Date.now,
-    index: true 
+    default: Date.now
   },
   temperature: { type: Number },
   vibration: { type: Number },

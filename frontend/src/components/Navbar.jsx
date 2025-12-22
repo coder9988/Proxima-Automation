@@ -1,39 +1,40 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 const productCategories = [
   {
-    id: "low-voltage",
-    label: "Low Voltage Products",
-    icon: "⚡",
-    title: "Low Voltage Products and Systems",
-    description: "Protection, control and distribution for homes, buildings and industry.",
-    ranges: ["MCB & MCCB", "Contactors", "Switchboards", "Distribution Panels"],
-  },
-  {
-    id: "residential",
-    label: "Residential Solutions",
-    icon: "🏠",
-    title: "Residential and Small Business",
-    description: "Smart, safe and efficient solutions for homes, shops and small offices.",
-    ranges: ["Smart Home", "Switches & Sockets", "Home Energy Monitoring"],
-  },
-  {
-    id: "industrial",
+    id: "automation",
     label: "Industrial Automation",
     icon: "🏭",
     title: "Industrial Automation and Control",
     description: "PLCs, drives, HMIs and control gear for industrial machines and processes.",
-    ranges: ["PLC Series", "Variable Speed Drives", "HMI Panels"],
+    ranges: ["PLC Controller", "HMI Panel", "Servo Drive", "VFD Drive"],
   },
   {
-    id: "solar",
-    label: "Solar & Energy",
-    icon: "☀️",
-    title: "Solar & Energy Storage",
-    description: "Inverters, controllers and storage solutions for solar power systems.",
-    ranges: ["Solar Inverters", "Battery Storage", "Monitoring Gateways"],
+    id: "sensors",
+    label: "Sensors & IoT",
+    icon: "📡",
+    title: "Smart Sensors and IoT Devices",
+    description: "Real-time monitoring with industrial-grade sensors and IoT connectivity.",
+    ranges: ["Temperature Sensor", "Vibration Sensor", "Pressure Transmitter", "Flow Meter"],
+  },
+  {
+    id: "power",
+    label: "Power Distribution",
+    icon: "⚡",
+    title: "Power Distribution Systems",
+    description: "Protection, control and distribution for homes, buildings and industry.",
+    ranges: ["Circuit Breaker", "Switchgear", "UPS Systems", "Transformer"],
+  },
+  {
+    id: "software",
+    label: "Software Solutions",
+    icon: "💻",
+    title: "Enterprise Software Platforms",
+    description: "SCADA, MES, and AI-powered analytics for industrial operations.",
+    ranges: ["SCADA Platform", "MES Suite", "Asset Management", "Predictive Analytics"],
   },
 ];
 
@@ -42,13 +43,40 @@ export default function Navbar() {
   const [activeCategory, setActiveCategory] = useState(productCategories[0]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { getCartCount, setIsCartOpen } = useCart();
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    if (showUserMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showUserMenu]);
+
+  const handleLogout = () => {
+    logout();
+    setShowUserMenu(false);
+    navigate("/");
+  };
 
   const isActive = (path) => location.pathname === path;
 
   const navLinks = [
     { path: "/", label: "Home" },
+    { path: "/dashboard", label: "Dashboard", authRequired: true },
     { path: "/software", label: "Software" },
     { path: "/services", label: "Services" },
     { path: "/solutions", label: "Solutions" },
@@ -101,8 +129,10 @@ export default function Navbar() {
                     {/* Left Panel */}
                     <div className="w-64 bg-gray-950 p-4 border-r border-gray-800">
                       {productCategories.map((cat) => (
-                        <div
+                        <Link
                           key={cat.id}
+                          to={`/products?category=${cat.id}`}
+                          onClick={() => setShowProducts(false)}
                           className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
                             activeCategory.id === cat.id
                               ? "bg-green-500/10 border-l-2 border-green-500"
@@ -114,23 +144,28 @@ export default function Navbar() {
                           <span className={`text-sm font-medium ${activeCategory.id === cat.id ? 'text-green-500' : 'text-gray-300'}`}>
                             {cat.label}
                           </span>
-                        </div>
+                        </Link>
                       ))}
                     </div>
 
                     {/* Right Panel */}
                     <div className="flex-1 p-6">
-                      <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                      <Link 
+                        to={`/products?category=${activeCategory.id}`}
+                        onClick={() => setShowProducts(false)}
+                        className="text-lg font-bold text-white mb-2 flex items-center gap-2 hover:text-green-500 transition-colors"
+                      >
                         {activeCategory.title}
                         <span className="text-green-500">→</span>
-                      </h3>
+                      </Link>
                       <p className="text-sm text-gray-400 mb-4">{activeCategory.description}</p>
                       
                       <div className="grid grid-cols-2 gap-3">
                         {activeCategory.ranges.map((range) => (
                           <Link
                             key={range}
-                            to="/products"
+                            to={`/products?category=${activeCategory.id}&search=${encodeURIComponent(range)}`}
+                            onClick={() => setShowProducts(false)}
                             className="p-3 bg-gray-800/50 rounded-xl hover:bg-gray-800 border border-gray-700/50 hover:border-green-500/50 transition-all group"
                           >
                             <h4 className="text-sm font-semibold text-white group-hover:text-green-500 transition-colors">
@@ -146,7 +181,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {navLinks.slice(1).map((link) => (
+            {navLinks.slice(1).filter(link => !link.authRequired || isAuthenticated).map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -163,11 +198,28 @@ export default function Navbar() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
+            {/* Cart Button */}
+            <button
+              onClick={() => {
+                navigate("/products");
+                setTimeout(() => setIsCartOpen(true), 100);
+              }}
+              className="relative p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {getCartCount() > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                  {getCartCount()}
+                </span>
+              )}
+            </button>
+
             {isAuthenticated ? (
-              <div className="relative">
+              <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
                   className="flex items-center gap-3 px-4 py-2 bg-gray-800 rounded-xl hover:bg-gray-700 transition-colors"
                 >
                   <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
@@ -180,20 +232,33 @@ export default function Navbar() {
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-xl shadow-xl py-2">
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-800 rounded-xl shadow-xl py-2 z-50">
                     <div className="px-4 py-2 border-b border-gray-800">
                       <p className="text-xs text-gray-400">{user?.email}</p>
                       <p className="text-xs text-green-500 capitalize">{user?.role}</p>
                     </div>
                     <Link
-                      to="/software"
+                      to="/dashboard"
+                      onClick={() => setShowUserMenu(false)}
                       className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
                     >
                       Dashboard
                     </Link>
+                    <Link
+                      to="/software"
+                      onClick={() => setShowUserMenu(false)}
+                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+                    >
+                      Monitor
+                    </Link>
                     <button
-                      onClick={logout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-800 transition-colors"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleLogout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-800 transition-colors cursor-pointer"
                     >
                       Sign Out
                     </button>
@@ -236,7 +301,7 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-800">
-            {navLinks.map((link) => (
+            {navLinks.filter(link => !link.authRequired || isAuthenticated).map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -256,15 +321,22 @@ export default function Navbar() {
                   <p className="text-xs text-gray-400">{user?.email}</p>
                 </div>
                 <Link
-                  to="/software"
+                  to="/dashboard"
                   className="block mx-4 mt-2 px-5 py-3 bg-gray-800 text-white text-sm font-semibold rounded-xl text-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
+                <Link
+                  to="/software"
+                  className="block mx-4 mt-2 px-5 py-3 bg-green-500/10 text-green-500 text-sm font-semibold rounded-xl text-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Monitor Machines
+                </Link>
                 <button
                   onClick={() => {
-                    logout();
+                    handleLogout();
                     setMobileMenuOpen(false);
                   }}
                   className="block w-full mx-4 mt-2 px-5 py-3 bg-red-500/10 text-red-500 text-sm font-semibold rounded-xl text-center"

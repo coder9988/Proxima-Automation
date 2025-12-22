@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -7,6 +8,7 @@ import alertRoutes from "./routes/alertRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
 import iotRoutes from "./routes/iotRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 import { startMetricSimulator } from "../simulator/metricSimulator.js";
 
 const app = express();
@@ -35,15 +37,17 @@ app.use("/api/alerts", alertRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/export", exportRoutes);
 app.use("/api/iot", iotRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Start server
 app.listen(5000, () => {
   console.log("🚀 Server running on port 5000");
   console.log("📡 API Endpoints:");
-  console.log("   - /api/machines  - Machine CRUD");
-  console.log("   - /api/history   - Historical metrics");
-  console.log("   - /api/alerts    - Alert logs");
-  console.log("   - /api/auth      - Authentication");
-  console.log("   - /api/export    - Data export");
-  console.log("   - /api/iot       - IoT devices");
+  console.log("   - /api/machines       - Machine CRUD");
+  console.log("   - /api/history        - Historical metrics");
+  console.log("   - /api/alerts         - Alert logs");
+  console.log("   - /api/auth           - Authentication");
+  console.log("   - /api/export         - Data export");
+  console.log("   - /api/iot            - IoT devices");
+  console.log("   - /api/notifications  - Email notifications");
 });
