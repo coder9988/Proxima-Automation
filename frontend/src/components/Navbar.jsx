@@ -80,6 +80,7 @@ export default function Navbar() {
     { path: "/software", label: "Software" },
     { path: "/services", label: "Services" },
     { path: "/solutions", label: "Solutions" },
+    { path: "/contact", label: "Contact" },
   ];
 
   return (

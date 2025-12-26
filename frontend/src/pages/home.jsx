@@ -5,22 +5,26 @@ export default function Home() {
     {
       icon: "📊",
       title: "Real-Time Monitoring",
-      description: "Monitor all your machines in real-time with live metrics and instant alerts.",
+      description:
+        "Monitor all your machines in real-time with live metrics and instant alerts.",
     },
     {
       icon: "🔧",
       title: "Predictive Maintenance",
-      description: "AI-powered predictions to prevent breakdowns before they happen.",
+      description:
+        "AI-powered predictions to prevent breakdowns before they happen.",
     },
     {
       icon: "⚡",
       title: "Energy Optimization",
-      description: "Reduce energy costs with smart load balancing and efficiency insights.",
+      description:
+        "Reduce energy costs with smart load balancing and efficiency insights.",
     },
     {
       icon: "🛡️",
       title: "Fault Detection",
-      description: "Automatic fault detection with detailed diagnostics and solutions.",
+      description:
+        "Automatic fault detection with detailed diagnostics and solutions.",
     },
   ];
 
@@ -35,7 +39,8 @@ export default function Home() {
     {
       icon: "🏭",
       title: "Manufacturing",
-      description: "Complete automation solutions for production lines and assembly plants.",
+      description:
+        "Complete automation solutions for production lines and assembly plants.",
     },
     {
       icon: "⚡",
@@ -50,7 +55,8 @@ export default function Home() {
     {
       icon: "🚗",
       title: "Automotive",
-      description: "Advanced automation for automotive manufacturing and testing.",
+      description:
+        "Advanced automation for automotive manufacturing and testing.",
     },
   ];
 
@@ -62,33 +68,44 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-green-500/5 via-transparent to-transparent" />
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-500 text-sm font-medium mb-8">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             Industrial Automation Platform
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Smart Factory
+            Proxima
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">
               Automation
             </span>
           </h1>
-          
+
           <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-            Monitor, control, and optimize your industrial machines with real-time data, 
-            predictive maintenance, and intelligent fault detection.
+            Monitor, control, and optimize your industrial machines with
+            real-time data, predictive maintenance, and intelligent fault
+            detection.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/software"
               className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-green-500/25 hover:-translate-y-1 transition-all flex items-center gap-2"
             >
               Launch Dashboard
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </Link>
             <Link
@@ -103,7 +120,9 @@ export default function Home() {
           <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-1">{stat.value}</div>
+                <div className="text-3xl md:text-4xl font-bold text-white mb-1">
+                  {stat.value}
+                </div>
                 <div className="text-gray-500 text-sm">{stat.label}</div>
               </div>
             ))}
@@ -112,8 +131,18 @@ export default function Home() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          <svg
+            className="w-6 h-6 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
           </svg>
         </div>
       </section>
@@ -127,7 +156,8 @@ export default function Home() {
               <span className="text-green-500"> Modern Industry</span>
             </h2>
             <p className="text-gray-400 max-w-2xl mx-auto">
-              Everything you need to monitor and control your industrial automation systems.
+              Everything you need to monitor and control your industrial
+              automation systems.
             </p>
           </div>
 
@@ -140,7 +170,9 @@ export default function Home() {
                 <div className="w-14 h-14 bg-green-500/10 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-green-500/20 transition-colors">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-400 text-sm">{feature.description}</p>
               </div>
             ))}
@@ -158,16 +190,32 @@ export default function Home() {
                 <span className="text-green-500"> Dashboard</span>
               </h2>
               <p className="text-gray-400 mb-8">
-                Get instant visibility into all your machines with our intuitive dashboard. 
-                Monitor temperature, vibration, current, voltage, and more in real-time.
+                Get instant visibility into all your machines with our intuitive
+                dashboard. Monitor temperature, vibration, current, voltage, and
+                more in real-time.
               </p>
-              
+
               <div className="space-y-4">
-                {["Live metrics visualization", "Instant alert notifications", "Historical data analysis", "Predictive maintenance insights"].map((item, i) => (
+                {[
+                  "Live metrics visualization",
+                  "Instant alert notifications",
+                  "Historical data analysis",
+                  "Predictive maintenance insights",
+                ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-6 h-6 bg-green-500/20 rounded-full flex items-center justify-center">
-                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg
+                        className="w-4 h-4 text-green-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
                       </svg>
                     </div>
                     <span className="text-gray-300">{item}</span>
@@ -180,8 +228,18 @@ export default function Home() {
                 className="inline-flex items-center gap-2 mt-8 text-green-500 font-semibold hover:text-green-400 transition-colors"
               >
                 Try the Dashboard
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </Link>
             </div>
@@ -202,8 +260,16 @@ export default function Home() {
                     { label: "Current", value: "45 A", color: "yellow" },
                   ].map((metric, i) => (
                     <div key={i} className="bg-gray-800/50 rounded-xl p-3">
-                      <div className="text-xs text-gray-500 mb-1">{metric.label}</div>
-                      <div className={`text-lg font-semibold ${metric.color === 'green' ? 'text-green-500' : 'text-yellow-500'}`}>
+                      <div className="text-xs text-gray-500 mb-1">
+                        {metric.label}
+                      </div>
+                      <div
+                        className={`text-lg font-semibold ${
+                          metric.color === "green"
+                            ? "text-green-500"
+                            : "text-yellow-500"
+                        }`}
+                      >
                         {metric.value}
                       </div>
                     </div>
@@ -256,15 +322,26 @@ export default function Home() {
               Ready to Transform Your Factory?
             </h2>
             <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-              Start monitoring your machines today with our powerful automation platform.
+              Start monitoring your machines today with our powerful automation
+              platform.
             </p>
             <Link
               to="/software"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-green-500/25 transition-all"
             >
               Get Started Free
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </Link>
           </div>
@@ -290,11 +367,17 @@ export default function Home() {
             <div>
               <h3 className="text-white font-semibold mb-4">Products</h3>
               <div className="space-y-2">
-                {["Dashboard", "Monitoring", "Analytics", "Alerts"].map((item) => (
-                  <Link key={item} to="/products" className="block text-gray-400 text-sm hover:text-green-500 transition-colors">
-                    {item}
-                  </Link>
-                ))}
+                {["Dashboard", "Monitoring", "Analytics", "Alerts"].map(
+                  (item) => (
+                    <Link
+                      key={item}
+                      to="/products"
+                      className="block text-gray-400 text-sm hover:text-green-500 transition-colors"
+                    >
+                      {item}
+                    </Link>
+                  )
+                )}
               </div>
             </div>
 
@@ -302,7 +385,11 @@ export default function Home() {
               <h3 className="text-white font-semibold mb-4">Company</h3>
               <div className="space-y-2">
                 {["About", "Careers", "Blog", "Contact"].map((item) => (
-                  <Link key={item} to="/" className="block text-gray-400 text-sm hover:text-green-500 transition-colors">
+                  <Link
+                    key={item}
+                    to="/"
+                    className="block text-gray-400 text-sm hover:text-green-500 transition-colors"
+                  >
                     {item}
                   </Link>
                 ))}
@@ -313,7 +400,11 @@ export default function Home() {
               <h3 className="text-white font-semibold mb-4">Connect</h3>
               <div className="flex gap-4">
                 {["Twitter", "LinkedIn", "GitHub"].map((item) => (
-                  <a key={item} href="#" className="text-gray-400 hover:text-green-500 transition-colors text-sm">
+                  <a
+                    key={item}
+                    href="#"
+                    className="text-gray-400 hover:text-green-500 transition-colors text-sm"
+                  >
                     {item}
                   </a>
                 ))}

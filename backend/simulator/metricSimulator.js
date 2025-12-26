@@ -18,7 +18,11 @@ const HISTORY_SAVE_INTERVAL = 10;
 
 export function startMetricSimulator() {
   console.log("🔄 Metric Simulator Started...");
-  console.log("📊 Historical data saved every", HISTORY_SAVE_INTERVAL, "seconds");
+  console.log(
+    "📊 Historical data saved every",
+    HISTORY_SAVE_INTERVAL,
+    "seconds"
+  );
 
   setInterval(async () => {
     try {
@@ -56,7 +60,9 @@ export function startMetricSimulator() {
 
       // Log status occasionally
       if (tickCounter % 60 === 0) {
-        console.log(`✔ Metrics updated | ${machines.length} machines | ${tickCounter} ticks`);
+        console.log(
+          `✔ Metrics updated | ${machines.length} machines | ${tickCounter} ticks`
+        );
       }
     } catch (err) {
       console.error("❌ Metric simulator error:", err.message);

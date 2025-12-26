@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -11,9 +11,9 @@ export default function Checkout() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [formData, setFormData] = useState({
     // Shipping
-    firstName: user?.name?.split(" ")[0] || "",
-    lastName: user?.name?.split(" ")[1] || "",
-    email: user?.email || "",
+    firstName: "",
+    lastName: "",
+    email: "",
     phone: "",
     address: "",
     city: "",
@@ -26,6 +26,19 @@ export default function Checkout() {
     expiry: "",
     cvv: "",
   });
+
+  // Update form data when user loads
+  useEffect(() => {
+    if (user) {
+      const nameParts = user.name ? user.name.split(" ") : [];
+      setFormData((prev) => ({
+        ...prev,
+        firstName: nameParts[0] || "",
+        lastName: nameParts.slice(1).join(" ") || "",
+        email: user.email || "",
+      }));
+    }
+  }, [user]);
 
   const subtotal = getCartTotal();
   const shipping = subtotal > 500 ? 0 : 29.99;
@@ -54,8 +67,12 @@ export default function Checkout() {
       <div className="min-h-screen bg-gray-950 pt-20">
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
           <div className="text-8xl mb-6">🛒</div>
-          <h1 className="text-3xl font-bold text-white mb-4">Your cart is empty</h1>
-          <p className="text-gray-400 mb-8">Add some products to your cart before checking out.</p>
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Your cart is empty
+          </h1>
+          <p className="text-gray-400 mb-8">
+            Add some products to your cart before checking out.
+          </p>
           <Link
             to="/products"
             className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-green-500/25 transition-all"
@@ -73,23 +90,40 @@ export default function Checkout() {
       <div className="min-h-screen bg-gray-950 pt-20">
         <div className="max-w-4xl mx-auto px-4 py-20 text-center">
           <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-12 h-12 text-green-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-4">Order Placed Successfully!</h1>
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Order Placed Successfully!
+          </h1>
           <p className="text-gray-400 mb-2">Thank you for your order.</p>
           <p className="text-gray-400 mb-8">
-            Order confirmation has been sent to <span className="text-green-500">{formData.email}</span>
+            Order confirmation has been sent to{" "}
+            <span className="text-green-500">{formData.email}</span>
           </p>
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-md mx-auto mb-8">
             <div className="flex justify-between items-center mb-3">
               <span className="text-gray-400">Order Number</span>
-              <span className="text-white font-mono">PRX-{Date.now().toString().slice(-8)}</span>
+              <span className="text-white font-mono">
+                PRX-{Date.now().toString().slice(-8)}
+              </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-400">Total Paid</span>
-              <span className="text-green-500 font-bold text-xl">${total.toFixed(2)}</span>
+              <span className="text-green-500 font-bold text-xl">
+                ₹{total.toFixed(2)}
+              </span>
             </div>
           </div>
           <div className="flex gap-4 justify-center">
@@ -116,7 +150,10 @@ export default function Checkout() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="py-8">
-          <Link to="/products" className="text-gray-400 hover:text-white text-sm flex items-center gap-2 mb-4 transition-colors">
+          <Link
+            to="/products"
+            className="text-gray-400 hover:text-white text-sm flex items-center gap-2 mb-4 transition-colors"
+          >
             ← Back to Products
           </Link>
           <h1 className="text-3xl font-bold text-white">Checkout</h1>
@@ -124,15 +161,39 @@ export default function Checkout() {
 
         {/* Progress Steps */}
         <div className="flex items-center justify-center gap-4 mb-10">
-          <div className={`flex items-center gap-2 ${step >= 1 ? "text-green-500" : "text-gray-500"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 1 ? "bg-green-500 text-white" : "bg-gray-800 text-gray-400"}`}>
+          <div
+            className={`flex items-center gap-2 ${
+              step >= 1 ? "text-green-500" : "text-gray-500"
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                step >= 1
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-800 text-gray-400"
+              }`}
+            >
               {step > 1 ? "✓" : "1"}
             </div>
             <span className="text-sm font-medium">Shipping</span>
           </div>
-          <div className={`w-16 h-0.5 ${step >= 2 ? "bg-green-500" : "bg-gray-800"}`} />
-          <div className={`flex items-center gap-2 ${step >= 2 ? "text-green-500" : "text-gray-500"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 2 ? "bg-green-500 text-white" : "bg-gray-800 text-gray-400"}`}>
+          <div
+            className={`w-16 h-0.5 ${
+              step >= 2 ? "bg-green-500" : "bg-gray-800"
+            }`}
+          />
+          <div
+            className={`flex items-center gap-2 ${
+              step >= 2 ? "text-green-500" : "text-gray-500"
+            }`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                step >= 2
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-800 text-gray-400"
+              }`}
+            >
               2
             </div>
             <span className="text-sm font-medium">Payment</span>
@@ -149,10 +210,12 @@ export default function Checkout() {
                   <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                     <span className="text-2xl">📦</span> Shipping Information
                   </h2>
-                  
+
                   <div className="grid sm:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">First Name *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        First Name *
+                      </label>
                       <input
                         type="text"
                         name="firstName"
@@ -164,7 +227,9 @@ export default function Checkout() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Last Name *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Last Name *
+                      </label>
                       <input
                         type="text"
                         name="lastName"
@@ -179,7 +244,9 @@ export default function Checkout() {
 
                   <div className="grid sm:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Email *
+                      </label>
                       <input
                         type="email"
                         name="email"
@@ -191,7 +258,9 @@ export default function Checkout() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Phone *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Phone *
+                      </label>
                       <input
                         type="tel"
                         name="phone"
@@ -199,13 +268,15 @@ export default function Checkout() {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors"
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+91 9790333223"
                       />
                     </div>
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Address *</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Address *
+                    </label>
                     <input
                       type="text"
                       name="address"
@@ -219,7 +290,9 @@ export default function Checkout() {
 
                   <div className="grid sm:grid-cols-3 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">City *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        City *
+                      </label>
                       <input
                         type="text"
                         name="city"
@@ -227,11 +300,13 @@ export default function Checkout() {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors"
-                        placeholder="New York"
+                        placeholder="Jalandhar"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">State *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        State *
+                      </label>
                       <input
                         type="text"
                         name="state"
@@ -239,11 +314,13 @@ export default function Checkout() {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors"
-                        placeholder="NY"
+                        placeholder="Punjab"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">ZIP Code *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        ZIP Code *
+                      </label>
                       <input
                         type="text"
                         name="zipCode"
@@ -251,13 +328,15 @@ export default function Checkout() {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors"
-                        placeholder="10001"
+                        placeholder="144001"
                       />
                     </div>
                   </div>
 
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Country</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Country
+                    </label>
                     <select
                       name="country"
                       value={formData.country}
@@ -269,6 +348,7 @@ export default function Checkout() {
                       <option>United Kingdom</option>
                       <option>Germany</option>
                       <option>Australia</option>
+                      <option>India</option>
                     </select>
                   </div>
 
@@ -302,12 +382,15 @@ export default function Checkout() {
                       {formData.firstName} {formData.lastName}
                     </p>
                     <p className="text-gray-400 text-sm">
-                      {formData.address}, {formData.city}, {formData.state} {formData.zipCode}
+                      {formData.address}, {formData.city}, {formData.state}{" "}
+                      {formData.zipCode}
                     </p>
                   </div>
-                  
+
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Name on Card *</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Name on Card *
+                    </label>
                     <input
                       type="text"
                       name="cardName"
@@ -320,7 +403,9 @@ export default function Checkout() {
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Card Number *</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Card Number *
+                    </label>
                     <input
                       type="text"
                       name="cardNumber"
@@ -335,7 +420,9 @@ export default function Checkout() {
 
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">Expiry Date *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Expiry Date *
+                      </label>
                       <input
                         type="text"
                         name="expiry"
@@ -348,7 +435,9 @@ export default function Checkout() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">CVV *</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        CVV *
+                      </label>
                       <input
                         type="text"
                         name="cvv"
@@ -364,8 +453,18 @@ export default function Checkout() {
 
                   {/* Secure Payment Notice */}
                   <div className="flex items-center gap-2 text-gray-400 text-sm mb-6">
-                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <svg
+                      className="w-5 h-5 text-green-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
                     </svg>
                     Your payment information is encrypted and secure
                   </div>
@@ -374,10 +473,20 @@ export default function Checkout() {
                     type="submit"
                     className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-green-500/25 transition-all flex items-center justify-center gap-2"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
                     </svg>
-                    Place Order - ${total.toFixed(2)}
+                    Place Order - ₹{total.toFixed(2)}
                   </button>
                 </div>
               )}
@@ -387,8 +496,10 @@ export default function Checkout() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sticky top-24">
-              <h2 className="text-xl font-bold text-white mb-6">Order Summary</h2>
-              
+              <h2 className="text-xl font-bold text-white mb-6">
+                Order Summary
+              </h2>
+
               {/* Cart Items */}
               <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
                 {cartItems.map((item) => (
@@ -397,10 +508,18 @@ export default function Checkout() {
                       {item.image}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-white text-sm font-medium truncate">{item.name}</h4>
-                      <p className="text-gray-400 text-xs">Qty: {item.quantity}</p>
+                      <h4 className="text-white text-sm font-medium truncate">
+                        {item.name}
+                      </h4>
+                      <p className="text-gray-400 text-xs">
+                        Qty: {item.quantity}
+                      </p>
                       <p className="text-green-500 font-semibold text-sm">
-                        ${(parseFloat(item.price.replace(/[$,]/g, "")) * item.quantity).toLocaleString()}
+                        ₹
+                        {(
+                          (parseFloat(item.price.replace(/[₹$,]/g, "")) || 0) *
+                          item.quantity
+                        ).toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -410,22 +529,30 @@ export default function Checkout() {
               {/* Totals */}
               <div className="border-t border-gray-800 pt-4 space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">Subtotal ({getCartCount()} items)</span>
-                  <span className="text-white">${subtotal.toLocaleString()}</span>
+                  <span className="text-gray-400">
+                    Subtotal ({getCartCount()} items)
+                  </span>
+                  <span className="text-white">
+                    ₹{subtotal.toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Shipping</span>
-                  <span className={shipping === 0 ? "text-green-500" : "text-white"}>
-                    {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
+                  <span
+                    className={shipping === 0 ? "text-green-500" : "text-white"}
+                  >
+                    {shipping === 0 ? "FREE" : `₹${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400">Tax (8%)</span>
-                  <span className="text-white">${tax.toFixed(2)}</span>
+                  <span className="text-white">₹{tax.toFixed(2)}</span>
                 </div>
                 <div className="border-t border-gray-800 pt-3 flex justify-between">
                   <span className="text-white font-semibold">Total</span>
-                  <span className="text-2xl font-bold text-green-500">${total.toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-green-500">
+                    ₹{total.toFixed(2)}
+                  </span>
                 </div>
               </div>
 
@@ -433,7 +560,7 @@ export default function Checkout() {
               {subtotal < 500 && (
                 <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
                   <p className="text-yellow-500 text-sm">
-                    Add ${(500 - subtotal).toFixed(2)} more for FREE shipping!
+                    Add ₹{(500 - subtotal).toFixed(2)} more for FREE shipping!
                   </p>
                 </div>
               )}
