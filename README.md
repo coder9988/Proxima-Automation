@@ -329,12 +329,6 @@ curl http://localhost:5000/api/export/csv/machines/summary -o machines.csv
 
 ---
 
-## 📝 License
-
-MIT License - Feel free to use this project for learning or commercial purposes.
-
----
-
 ## 👨‍💻 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
